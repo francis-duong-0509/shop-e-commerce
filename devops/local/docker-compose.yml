@@ -1,0 +1,117 @@
+name: shopx-web-local
+
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: devops/local/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+        - PHP_VERSION=8.3
+        - NODE_VERSION=20
+        - COMPOSER_VERSION=2.7
+      cache_from:
+        - php:8.3-fpm-alpine
+    container_name: shopx-web-app-local
+    working_dir: /var/www/html
+    volumes:
+      # Application code
+      - ../../:/var/www/html
+      # Configuration files
+      - ./configs/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./configs/nginx.conf:/etc/nginx/http.d/default.conf:ro
+      - ./configs/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:ro
+    environment:
+      - PHP_FPM_POOL_NAME=www
+      - DOCKER_BUILDKIT=1
+      - PHP_IDE_CONFIG=serverName=shopx-web-local
+      - XDEBUG_MODE=${XDEBUG_MODE:-off}
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
+    networks:
+      - shopx-web-network-local
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    ports:
+      - "${DOCKER_NGINX_PORT:-8200}:80"
+      - "${DOCKER_VITE_PORT:-8209}:8209"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+
+  mysql:
+    image: mysql:8.0.35
+    platform: linux/amd64
+    container_name: shopx-web-mysql-local
+    ports:
+      - "${DOCKER_MYSQL_PORT:-8201}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-shopx_db}
+      MYSQL_USER: ${DB_USERNAME:-shopx_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-shopx_password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - shopx-web-mysql-data-local:/var/lib/mysql
+      - ./configs/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro
+      # - ../common/configs/app.sql:/docker-entrypoint-initdb.d/01-init.sql:ro  # Commented out - app.sql is a directory
+    networks:
+      - shopx-web-network-local
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-root_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    container_name: shopx-web-phpmyadmin-local
+    ports:
+      - "${DOCKER_PHPMYADMIN_PORT:-8202}:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      UPLOAD_LIMIT: 300M
+      MEMORY_LIMIT: 512M
+      MAX_EXECUTION_TIME: 600
+    networks:
+      - shopx-web-network-local
+    depends_on:
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  shopx-web-network-local:
+    driver: bridge
+
+volumes:
+  shopx-web-mysql-data-local:
+    driver: local
