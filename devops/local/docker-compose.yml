@@ -45,7 +45,7 @@ services:
       - "${DOCKER_NGINX_PORT:-8200}:80"
       - "${DOCKER_VITE_PORT:-8209}:8209"
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/ || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/ || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 6
@@ -78,7 +78,7 @@ services:
           cpus: '0.25'
           memory: 512M
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-root_password}"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-root_password}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -107,6 +107,20 @@ services:
         limits:
           cpus: '0.25'
           memory: 256M
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: shopx-web-mailhog-local
+    ports:
+      - "${DOCKER_MAILHOG_SMTP_PORT:-8204}:1025"
+      - "${DOCKER_MAILHOG_WEB_PORT:-8205}:8025"
+    networks:
+      - shopx-web-network-local
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
 
 networks:
   shopx-web-network-local:

@@ -37,6 +37,11 @@ if [ ! -z "$DB_HOST" ]; then
     wait_for_service "MySQL" "mysqladmin ping -h$DB_HOST -uroot -p$DB_ROOT_PASSWORD --silent"
 fi
 
+# Wait for MailHog (if configured as mail host)
+if [ "$MAIL_HOST" = "shopx-web-mailhog-local" ]; then
+    wait_for_service "MailHog" "nc -z $MAIL_HOST $MAIL_PORT"
+fi
+
 # Check if vendor directory exists (in case of volume mount)
 if [ ! -f /var/www/html/vendor/autoload.php ]; then
     echo "📦 Installing composer dependencies (volume mount detected)..."
@@ -183,6 +188,19 @@ if ! php artisan db:show --database=mysql 2>/dev/null; then
     exit 1
 fi
 echo "   ✅ Database connection successful"
+
+# Mail connection (basic test)
+if [ "$MAIL_HOST" = "shopx-web-mailhog-local" ]; then
+    echo "   📧 Mail service:"
+    if ! nc -z $MAIL_HOST $MAIL_PORT 2>/dev/null; then
+        echo "   ❌ MailHog connection failed"
+        echo "   🔧 Check MAIL_HOST: $MAIL_HOST"
+        echo "   🔧 Check MAIL_PORT: $MAIL_PORT"
+        echo "   🛑 Stopping all processes due to MailHog connection failure"
+        exit 1
+    fi
+    echo "   ✅ MailHog connection successful"
+fi
 
 echo "✨ Setup complete!"
 
