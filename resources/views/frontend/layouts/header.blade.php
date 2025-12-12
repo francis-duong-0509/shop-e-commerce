@@ -128,23 +128,19 @@
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                     <ul>
                                         <li>
-                                            <a href="#"><i class="fi fi-rs-user mr-10"></i>My
-                                                Account</a>
+                                            <a href="{{ route('profile') }}"><i class="fi fi-rs-user mr-10"></i>{{ __('Thông tin tài khoản') }}</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fi fi-rs-location-alt mr-10"></i>Order
-                                                Tracking</a>
+                                            <a href="#"><i class="fi fi-rs-location-alt mr-10"></i>{{ __('Theo dõi đơn hàng') }}</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fi fi-rs-label mr-10"></i>My
-                                                Voucher</a>
+                                            <a href="#"><i class="fi fi-rs-label mr-10"></i>{{ __('Voucher') }}</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fi fi-rs-heart mr-10"></i>My
-                                                Wishlist</a>
+                                            <a href="#"><i class="fi fi-rs-heart mr-10"></i>{{ __('Wishlist') }}</a>
                                         </li>
                                         <li>
-                                            <a href="#"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a>
+                                            <a href="#"><i class="fi fi-rs-settings-sliders mr-10"></i>{{ __('Cài đặt') }}</a>
                                         </li>
                                         <li>
                                             <a href="" onclick="event.preventDefault(); $('.logout-form').submit();" class="dropdown-item">

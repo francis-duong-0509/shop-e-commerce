@@ -16,22 +16,22 @@
                             <div class="dashboard-menu">
                                 <ul class="nav flex-column" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" href=""><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                        <a class="nav-link active" href=""><i class="fi-rs-settings-sliders mr-10"></i>{{ __('Bảng điều khiển') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"href=""><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        <a class="nav-link"href=""><i class="fi-rs-shopping-bag mr-10"></i>{{ __('Đơn hàng') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href=""><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                        <a class="nav-link" href=""><i class="fi-rs-shopping-cart-check mr-10"></i>{{ __('Theo dõi đơn hàng') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href=""><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                        <a class="nav-link" href=""><i class="fi-rs-marker mr-10"></i>{{ __('Địa chỉ') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href=""><i class="fi-rs-user mr-10"></i>Account details</a>
+                                        <a class="nav-link" href="{{ route('profile') }}"><i class="fi-rs-user mr-10"></i>{{ __('Thông tin tài khoản') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href=""><i class="fi-rs-heart mr-10"></i> Wishlist</a>
+                                        <a class="nav-link" href=""><i class="fi-rs-heart mr-10"></i>{{ __('Yêu thích') }}</a>
                                     </li>
                                 </ul>
                             </div>
