@@ -56,16 +56,16 @@
 
                                         <div class="payment_option mb-30">
                                             <div class="custome-radio">
-                                                <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="" />
-                                                <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">{{ __('Tôi là khách hàng') }}</label>
+                                                <input class="form-check-input" name="user_type" value="user" required type="radio" id="exampleRadios3" checked />
+                                                <label class="form-check-label" for="exampleRadios3">{{ __('Tôi là khách hàng') }}</label>
                                             </div>
                                             <div class="custome-radio">
-                                                <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="" />
-                                                <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">{{ __('Tôi là người bán') }}</label>
+                                                <input class="form-check-input" name="user_type" value="vendor" required type="radio" id="exampleRadios4" />
+                                                <label class="form-check-label" for="exampleRadios4">{{ __('Tôi là người bán') }}</label>
                                             </div>
                                         </div>
                                         <div class="form-group mb-0">
-                                            <button type="submit" class="btn btn-fill-out btn-block hover-up font-weight-bold" name="login">{{ __('Đăng ký') }}</button>
+                                            <button type="submit" class="btn btn-fill-out btn-block hover-up font-weight-bold">{{ __('Đăng ký') }}</button>
                                         </div>
                                     </form>
                                 </div>

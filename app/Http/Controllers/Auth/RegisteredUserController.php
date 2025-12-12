@@ -33,17 +33,32 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'user_type' => ['required', 'in:user,vendor'],
+        ], [
+            'name.required' => __('Vui lòng nhập tên'),
+            'email.required' => __('Vui lòng nhập email'),
+            'email.email' => __('Vui lòng nhập email hợp lệ'),
+            'email.unique' => __('Email đã tồn tại'),
+            'password.required' => __('Vui lòng nhập mật khẩu'),
+            'password.confirmed' => __('Mật khẩu không khớp'),
+            'user_type.required' => __('Vui lòng chọn loại người dùng'),
+            'user_type.in' => __('Loại người dùng không hợp lệ'),
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'user_type' => $request->user_type,
             'password' => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
+
+        if (Auth::guard('web')->user()->user_type == 'vendor') {
+            return redirect(route('vendor.dashboard', absolute: false));
+        }
 
         return redirect(route('dashboard', absolute: false));
     }
